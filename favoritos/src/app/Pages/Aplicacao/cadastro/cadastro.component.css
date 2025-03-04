@@ -1,0 +1,76 @@
+/* Reset e estilo básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #111;
+  color: #fff;
+}
+
+/* Estilo do menu */
+.menu-container {
+  width: 250px;
+}
+
+.menu {
+  list-style-type: none;
+  padding: 0;
+}
+
+.menu li {
+  position: relative;
+}
+
+.menu li a {
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #222;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+}
+
+.menu li a:hover {
+  background-color: #f39c12;
+}
+
+/* Submenus sempre visíveis */
+.submenu {
+  list-style-type: none;
+  padding: 0;
+  background-color: #333;
+  display: block; /* Deixe o submenu sempre visível */
+}
+
+.submenu-item > a {
+  font-weight: bold;
+}
+
+.submenu li a {
+  padding-left: 30px;
+  font-size: 16px;
+}
+
+.submenu li a:hover {
+  background-color: #e67e22;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+  .menu-container {
+    width: 200px;
+  }
+
+  .menu li a {
+    font-size: 16px;
+  }
+
+  .submenu li a {
+    font-size: 14px;
+  }
+}

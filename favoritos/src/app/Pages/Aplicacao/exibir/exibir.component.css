@@ -1,0 +1,24 @@
+/* Estilos gerais (para telas grandes) */
+.card {
+  display: flex;
+  justify-content: flex-start;  /* Alinha à esquerda por padrão */
+  width: 100%;
+}
+
+p-tieredmenu {
+  display: inline-block;
+  width: auto;
+  max-width: 80%;
+}
+
+/* Media query para dispositivos móveis (exemplo: telas menores que 768px) */
+@media (max-width: 768px) {
+  .card {
+    justify-content: center;  /* Centraliza apenas em telas pequenas */
+  }
+
+  p-tieredmenu {
+    width: 100%;  /* Permite que o menu ocupe toda a largura disponível, se necessário */
+    max-width: none;  /* Remove a limitação de largura */
+  }
+}

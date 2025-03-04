@@ -1,0 +1,24 @@
+/* @import "primeng/resources/themes/lara-light-blue/theme.css"; */
+/* @import "primeng/resources/themes/bootstrap4-dark-blue/theme.css";
+@import "primeng/resources/primeng.css"; */
+@import "primeicons/primeicons.css";
+@import 'primeflex/primeflex.css';
+
+.container {
+  max-width: 1200px; /* Defina a largura máxima desejada */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;  /* Para um pouco de espaço lateral */
+  padding-right: 1rem; /* Para um pouco de espaço lateral */
+}
+
+:root {
+  --font-family: Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: 10px;
+  font-weight: 100;
+  line-height: 1.5;
+}
