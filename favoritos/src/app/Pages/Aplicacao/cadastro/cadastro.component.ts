@@ -21,6 +21,8 @@ export class CadastroComponent implements OnInit {
   lstMenus: CatSubCatModel[] = [];
   items: MenuItem[] = [];
   itemSelecionado!: MenuItem;
+  novoItem: CatSubCatModel = new CatSubCatModel();
+  boolRegistro: boolean = false;
 
   files: TreeNode[] = [];
 
@@ -149,10 +151,35 @@ export class CadastroComponent implements OnInit {
 
   SelecionaItem(item: MenuItem) {
     this.itemSelecionado = item;
+    console.warn(this.itemSelecionado);
   }
 
   Cancelar() {
     this.itemSelecionado = {} as MenuItem;
+    this.boolRegistro = false;
     // console.warn(this.itemSelecionado);
+  }
+
+  Selecao(tipo: string) {
+    switch (tipo) {
+      case 'NOVA_SUBCATEGORIA':
+        console.warn('NOVA_SUBCATEGORIA', this.itemSelecionado);
+        break;
+      case 'NOVO_SITE':
+        console.warn('NOVO_SITE', this.itemSelecionado);
+        break;
+
+      default:
+        break;
+    }
+
+    this.boolRegistro = true;
+  }
+
+  SalvarNovaSubcategoria() {
+    this.novoItem.CatPai = this.itemSelecionado.id
+      ? +this.itemSelecionado.id
+      : 0;
+    console.warn(this.novoItem);
   }
 }

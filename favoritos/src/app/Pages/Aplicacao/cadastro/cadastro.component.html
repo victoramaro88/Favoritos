@@ -13,47 +13,65 @@
 
 <br>
 
-<!-- <div class="card flex justify-center">
-  <p-tieredmenu [model]="items" />
-</div> -->
-
-<!-- <br><hr><br> -->
-
-<p-panelmenu [model]="items" styleClass="w-full md:w-20rem" />
-
-<br><br>
-
-<div *ngIf="itemSelecionado && itemSelecionado.label" class="text-center mt-5">
-  <div class="grid">
-    <div class="col-6">
-        <div class="text-center p-3 border-round-sm font-bold">
-          ITEM SELECIONADO:
-          <br>
-          {{itemSelecionado ? itemSelecionado.label : ''}}
-        </div>
+<div class="grid">
+  <div class="col-12 md:col-6">
+    <div class="text-center mb-3">
+      <p-panelmenu [model]="items" styleClass="w-full" />
     </div>
-    <div class="col-6">
-        <div class="text-center p-3 border-round-sm font-bold">
-          TIPO:
-          <br>
-          {{itemSelecionado ? itemSelecionado.target : ''}}
+  </div>
+  <div *ngIf="itemSelecionado && itemSelecionado.label && !boolRegistro" class="col-12 md:col-6">
+    <div *ngIf="itemSelecionado && itemSelecionado.label" class="text-center">
+      <div class="grid">
+        <div class="col-6">
+          <div class="text-center border-round-sm font-bold">
+            ITEM SELECIONADO:
+            <br>
+            {{itemSelecionado ? itemSelecionado.label : ''}}
+          </div>
         </div>
+        <div class="col-6">
+          <div class="text-center border-round-sm font-bold">
+            TIPO:
+            <br>
+            {{itemSelecionado ? itemSelecionado.target : ''}}
+          </div>
+        </div>
+      </div>
+      <br>
+      <p>AÇÕES:</p><br>
+      <div class="grid">
+        <div class="col-6">
+          <p-button (onClick)="Selecao('NOVA_SUBCATEGORIA');" label="Nova Subcategoria" [raised]="true" severity="success" /><br><br>
+          <p-button (onClick)="Selecao('NOVO_SITE');" label="Novo Site" [raised]="true" severity="contrast" /><br><br>
+          <p-button label="Editar" [raised]="true" severity="info" /><br><br>
+        </div>
+        <div class="col-6">
+          <p-button label="Apagar" [raised]="true" severity="warn" /><br><br>
+          <p-button (onClick)="Cancelar();" label="Cancelar" [raised]="true" severity="danger" /><br><br>
+        </div>
+      </div>
     </div>
-</div>
-  <div>
-    <p>AÇÕES:</p><br>
-    <p-button label="Nova Subcategoria" [raised]="true" severity="success" /><br><br>
-    <p-button label="Novo Site" [raised]="true" severity="contrast" /><br><br>
-    <p-button label="Editar" [raised]="true" severity="info" /><br><br>
-    <p-button label="Apagar" [raised]="true" severity="warn" /><br><br>
-    <p-button (onClick)="Cancelar();" label="Cancelar" [raised]="true" severity="danger" /><br><br>
-    <!-- <p-button label="Primary" [raised]="true" />
-    <p-button label="Secondary" [raised]="true" severity="secondary" />
-    <p-button label="Help" [raised]="true" severity="help" /> -->
+  </div>
+  <div *ngIf="!itemSelecionado || !itemSelecionado.label" class="col-12 md:col-6 text-center">
+    <p-button label="Nova Categoria" [raised]="true" severity="success" />
+  </div>
+  <!-- TELAS PARA OS CADASTROS / ALTERAÇÕES -->
+  <div class="col-12 md:col-6 text-center p-3">
+    <div *ngIf="boolRegistro && itemSelecionado.target === 'CATEGORIA'">
+      <p>NOVA SUBCATEGORIA</p>
+      <span>Categoria Pai: {{itemSelecionado.label}}</span><br>
+      <div class="field">
+        <label for="catDesc">Nome</label>
+        <input [(ngModel)]="novoItem.CatDesc" id="catDesc" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+      </div>
+      <br>
+      <p-button (onClick)="SalvarNovaSubcategoria();" label="Salvar" [raised]="true" severity="success" />
+       &nbsp;
+      <p-button (onClick)="Cancelar();" label="Cancelar" [raised]="true" severity="danger" />
+    </div>
+    <div *ngIf="boolRegistro && itemSelecionado.target === 'SITE'">
+      <p>SITE CARAI</p>
+      <p-button (onClick)="Cancelar();" label="Cancelar" [raised]="true" severity="danger" />
+    </div>
   </div>
 </div>
-
-
-<!-- <div class="card">
-  <p-tree [value]="files" styleClass="w-full md:w-[30rem]" />
-</div> -->
