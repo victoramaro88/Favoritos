@@ -30,6 +30,9 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TreeModule } from 'primeng/tree';
+import { Tree } from 'primeng/tree';
+import { PanelMenuModule } from 'primeng/panelmenu';
 
 @NgModule({
   imports: [
@@ -63,6 +66,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ConfirmDialogModule,
     TieredMenuModule,
     ProgressSpinnerModule,
+    TreeModule,
+    Tree,
+    PanelMenuModule,
   ],
   exports: [
     CommonModule,
@@ -95,6 +101,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ConfirmDialogModule,
     TieredMenuModule,
     ProgressSpinnerModule,
+    TreeModule,
+    Tree,
+    PanelMenuModule,
   ],
   providers: [],
 })

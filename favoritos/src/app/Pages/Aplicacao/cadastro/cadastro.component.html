@@ -13,40 +13,47 @@
 
 <br>
 
-<div class="menu-container">
- <ul class="menu">
-  <li class="submenu-item" *ngFor="let itemPai of lstMenus">
-    <a *ngIf="itemPai.CatPai === null">
-      {{itemPai.CatDesc}}
-    </a>
-    <ul class="submenu" *ngFor="let itemFilhos of itemPai.SubCategorias">
-      <li class="" *ngIf="itemFilhos.CatPai === itemPai.CatCodi">
-        <a>{{itemFilhos.CatDesc}}</a>
-      </li>
-    </ul>
-  </li>
- </ul>
+<!-- <div class="card flex justify-center">
+  <p-tieredmenu [model]="items" />
+</div> -->
+
+<!-- <br><hr><br> -->
+
+<p-panelmenu [model]="items" styleClass="w-full md:w-20rem" />
+
+<br><br>
+
+<div *ngIf="itemSelecionado && itemSelecionado.label" class="text-center mt-5">
+  <div class="grid">
+    <div class="col-6">
+        <div class="text-center p-3 border-round-sm font-bold">
+          ITEM SELECIONADO:
+          <br>
+          {{itemSelecionado ? itemSelecionado.label : ''}}
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="text-center p-3 border-round-sm font-bold">
+          TIPO:
+          <br>
+          {{itemSelecionado ? itemSelecionado.target : ''}}
+        </div>
+    </div>
+</div>
+  <div>
+    <p>AÇÕES:</p><br>
+    <p-button label="Nova Subcategoria" [raised]="true" severity="success" /><br><br>
+    <p-button label="Novo Site" [raised]="true" severity="contrast" /><br><br>
+    <p-button label="Editar" [raised]="true" severity="info" /><br><br>
+    <p-button label="Apagar" [raised]="true" severity="warn" /><br><br>
+    <p-button (onClick)="Cancelar();" label="Cancelar" [raised]="true" severity="danger" /><br><br>
+    <!-- <p-button label="Primary" [raised]="true" />
+    <p-button label="Secondary" [raised]="true" severity="secondary" />
+    <p-button label="Help" [raised]="true" severity="help" /> -->
+  </div>
 </div>
 
-<br><hr><br>
 
-<div class="menu-container">
-  <ul class="menu">
-    <li><a href="#">Home</a></li>
-    <li class="submenu-item">
-      <a href="#">Sobre</a>
-      <ul class="submenu">
-        <li><a href="#">Quem Somos</a></li>
-        <li><a href="#">Nossa Missão</a></li>
-      </ul>
-    </li>
-    <li class="submenu-item">
-      <a href="#">Serviços</a>
-      <ul class="submenu">
-        <li><a href="#">Consultoria</a></li>
-        <li><a href="#">Desenvolvimento</a></li>
-      </ul>
-    </li>
-    <li><a href="#">Contato</a></li>
-  </ul>
-</div>
+<!-- <div class="card">
+  <p-tree [value]="files" styleClass="w-full md:w-[30rem]" />
+</div> -->
