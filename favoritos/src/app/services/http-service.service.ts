@@ -19,4 +19,15 @@ export class HttpService {
   }
 
   // #endregion
+
+  // #region POST
+
+  public PostCategoria(objCategoria: CatSubCatModel): Observable<string> {
+    return this.http.post<string>(
+      `${environment.apiServicos}/Favoritos/PostCategoria`,
+      objCategoria
+    );
+  }
+
+  // #endregion
 }

@@ -43,7 +43,7 @@
         <div class="col-6">
           <p-button (onClick)="Selecao('NOVA_SUBCATEGORIA');" label="Nova Subcategoria" [raised]="true" severity="success" /><br><br>
           <p-button (onClick)="Selecao('NOVO_SITE');" label="Novo Site" [raised]="true" severity="contrast" /><br><br>
-          <p-button label="Editar" [raised]="true" severity="info" /><br><br>
+          <p-button (onClick)="Selecao('EDITAR_CATEGORIA');" label="Editar" [raised]="true" severity="info" /><br><br>
         </div>
         <div class="col-6">
           <p-button label="Apagar" [raised]="true" severity="warn" /><br><br>
@@ -62,7 +62,7 @@
       <span>Categoria Pai: {{itemSelecionado.label}}</span><br>
       <div class="field">
         <label for="catDesc">Nome</label>
-        <input [(ngModel)]="novoItem.CatDesc" id="catDesc" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+        <input [(ngModel)]="novoItem.CatDesc" id="catDesc" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
       </div>
       <br>
       <p-button (onClick)="SalvarNovaSubcategoria();" label="Salvar" [raised]="true" severity="success" />

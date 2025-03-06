@@ -111,6 +111,7 @@ export class CadastroComponent implements OnInit {
     listaHierarquia.forEach((item) => {
       let objMenu: MenuItem = {
         id: item.CatCodi.toString(),
+        key: item.CatPai ? item.CatPai!.toString() : '',
         icon: 'pi pi-folder',
         label: item.CatDesc,
         target: 'CATEGORIA',
@@ -156,6 +157,7 @@ export class CadastroComponent implements OnInit {
 
   Cancelar() {
     this.itemSelecionado = {} as MenuItem;
+    this.novoItem = new CatSubCatModel();
     this.boolRegistro = false;
     // console.warn(this.itemSelecionado);
   }
@@ -164,6 +166,14 @@ export class CadastroComponent implements OnInit {
     switch (tipo) {
       case 'NOVA_SUBCATEGORIA':
         console.warn('NOVA_SUBCATEGORIA', this.itemSelecionado);
+        this.novoItem.CatCodi = +this.itemSelecionado.id!;
+        this.novoItem.CatPai = +this.itemSelecionado['key'];
+        break;
+      case 'EDITAR_CATEGORIA':
+        console.warn('EDITAR_CATEGORIA', this.itemSelecionado);
+        this.novoItem.CatCodi = +this.itemSelecionado.id!;
+        this.novoItem.CatPai = +this.itemSelecionado['key'];
+        this.novoItem.CatDesc = this.itemSelecionado.label!;
         break;
       case 'NOVO_SITE':
         console.warn('NOVO_SITE', this.itemSelecionado);
@@ -177,9 +187,54 @@ export class CadastroComponent implements OnInit {
   }
 
   SalvarNovaSubcategoria() {
-    this.novoItem.CatPai = this.itemSelecionado.id
-      ? +this.itemSelecionado.id
+    if (this.novoItem.CatPai === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Atenção: ',
+        detail: 'Subcategoria sem referência hierárquica.',
+      });
+      return;
+    }
+    if (this.novoItem.CatDesc.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Atenção: ',
+        detail: 'Insira uma descrição.',
+      });
+      return;
+    }
+
+    this.novoItem.CatPai = +this.itemSelecionado['key']
+      ? +this.itemSelecionado['key']
       : 0;
-    console.warn(this.novoItem);
+    this.PostCategoria(this.novoItem);
+  }
+
+  PostCategoria(objCat: CatSubCatModel) {
+    this.boolLoading = true;
+    this.http.PostCategoria(objCat).subscribe({
+      next: (response) => {
+        console.warn('Retorno Insert? ', response);
+        if (response === 'Salvo com sucesso!') {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso! ',
+            detail: 'Subcategoria Salva com Sucesso!',
+          });
+        }
+        this.boolLoading = false;
+        this.GetFavoritos();
+        this.Cancelar();
+      },
+      error: (error) => {
+        console.error('Erro ao carregar dados:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro: ',
+          detail: 'Falha ao realizar a operação, contate o suporte.',
+        });
+        this.boolLoading = false;
+      },
+    });
   }
 }

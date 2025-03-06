@@ -1,6 +1,7 @@
 ﻿using API_Favoritos.Models;
 using API_Favoritos.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_Favoritos.Controllers
 {
@@ -26,6 +27,67 @@ namespace API_Favoritos.Controllers
             List<CatSubCatModel> catSubcat = ObterHierarquiaCategorias();
 
             return catSubcat;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<string>> PostCategoria([FromBody] CatSubCatModel objCategoria)
+        {
+            try
+            {
+                if (objCategoria.CatCodi == 0 && objCategoria.CatPai > 0) //-> INSERE SUBCATEGORIA
+                {
+                    objCategoria.CatCodi = _context.Categoria.Max(p => (int?)p.CatCodi) + 1 ?? 1;
+
+                    Categorium objInsert = new Categorium();
+                    objInsert.CatCodi = objCategoria.CatCodi;
+                    objInsert.CatDesc = objCategoria.CatDesc!;
+                    objInsert.CatPai = objCategoria.CatPai;
+
+                    _context.Categoria.Add(objInsert);
+                    await _context.SaveChangesAsync();
+
+                    return Ok("Salvo com sucesso!");
+                }
+                else if(objCategoria.CatCodi == 0 && objCategoria.CatPai == 0) //-> INSERE CATEGORIA PADRÃO
+                {
+                    objCategoria.CatCodi = _context.Categoria.Max(p => (int?)p.CatCodi) + 1 ?? 1;
+
+                    Categorium objInsert = new Categorium();
+                    objInsert.CatCodi = objCategoria.CatCodi;
+                    objInsert.CatDesc = objCategoria.CatDesc!;
+                    objInsert.CatPai = null;
+
+                    _context.Categoria.Add(objInsert);
+                    await _context.SaveChangesAsync();
+
+                    return Ok("Salvo com sucesso!");
+                }
+                else if (objCategoria.CatCodi != 0 && objCategoria.CatPai != 0 && objCategoria.CatCodi != objCategoria.CatPai) //-> ALTERA CATEGORIA EXISTENTE
+                {
+                    if (!CategoriaExists(objCategoria.CatCodi))
+                    {
+                        return NotFound("Registro não encontrado.");
+                    }
+
+                    Categorium objUpdate = new Categorium();
+                    objUpdate.CatCodi = objCategoria.CatCodi;
+                    objUpdate.CatDesc = objCategoria.CatDesc!;
+                    objUpdate.CatPai = objCategoria.CatPai;
+
+                    _context.Entry(objUpdate).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+
+                    return Ok("Alterado com sucesso!");
+                }
+                else
+                { 
+                    return BadRequest("Parâmetros inválidos."); 
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + " \n " + ex.InnerException?.Message);
+            }
         }
 
         [NonAction]
@@ -109,6 +171,10 @@ namespace API_Favoritos.Controllers
             return lstRetorno;
         }
 
+        private bool CategoriaExists(int catCodi)
+        {
+            return _context.Categoria.Any(e => e.CatCodi == catCodi);
+        }
 
         //[HttpGet()]
         //public List<(CatSubCatModel categoria, int nivel)> ObterHierarquiaCategoriasNiveladas()
