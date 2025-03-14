@@ -73,6 +73,7 @@ namespace API_Favoritos.Controllers
                     objUpdate.CatCodi = objCategoria.CatCodi;
                     objUpdate.CatDesc = objCategoria.CatDesc!;
                     objUpdate.CatPai = objCategoria.CatPai;
+                    objUpdate.SttCodi = 1;
 
                     _context.Entry(objUpdate).State = EntityState.Modified;
                     await _context.SaveChangesAsync();

@@ -43,7 +43,8 @@
         <div class="col-6">
           <p-button (onClick)="Selecao('NOVA_SUBCATEGORIA');" label="Nova Subcategoria" [raised]="true" severity="success" /><br><br>
           <p-button (onClick)="Selecao('NOVO_SITE');" label="Novo Site" [raised]="true" severity="contrast" /><br><br>
-          <p-button (onClick)="Selecao('EDITAR_CATEGORIA');" label="Editar" [raised]="true" severity="info" /><br><br>
+          <p-button (onClick)="Selecao('EDITAR_CATEGORIA');" label="Editar Categoria" [raised]="true" severity="info" /><br><br>
+          <p-button (onClick)="Selecao('EDITAR_SITE');" label="Editar Site" [raised]="true" severity="info" /><br><br>
         </div>
         <div class="col-6">
           <p-button label="Apagar" [raised]="true" severity="warn" /><br><br>
@@ -58,7 +59,7 @@
   <!-- TELAS PARA OS CADASTROS / ALTERAÇÕES -->
   <div class="col-12 md:col-6 text-center p-3">
     <div *ngIf="boolRegistro && itemSelecionado.target === 'CATEGORIA'">
-      <p>NOVA SUBCATEGORIA</p>
+      <p>CATEGORIA / SUBCATEGORIA</p>
       <span>Categoria Pai: {{itemSelecionado.label}}</span><br>
       <div class="field">
         <label for="catDesc">Nome</label>
@@ -70,7 +71,20 @@
       <p-button (onClick)="Cancelar();" label="Cancelar" [raised]="true" severity="danger" />
     </div>
     <div *ngIf="boolRegistro && itemSelecionado.target === 'SITE'">
-      <p>SITE CARAI</p>
+      <p>SITE</p>
+      <span>Categoria Pai: {{itemSelecionado.label}}</span><br>
+      <div class="field">
+        <label for="sitDesc">Descrição</label>
+        <input [(ngModel)]="novoSite.sitDesc" id="sitDesc" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
+      </div>
+      <br>
+      <div class="field">
+        <label for="sitLink">Link</label>
+        <input [(ngModel)]="novoSite.sitLink" id="sitLink" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
+      </div>
+      <br>
+      <p-button (onClick)="SalvarNovoSite();" label="Salvar" [raised]="true" severity="success" />
+       &nbsp;
       <p-button (onClick)="Cancelar();" label="Cancelar" [raised]="true" severity="danger" />
     </div>
   </div>

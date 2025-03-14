@@ -37,7 +37,7 @@ export class ExibirComponent implements OnInit {
     this.boolLoading = true;
     this.http.GetFavoritos().subscribe({
       next: (response) => {
-        // console.warn('Retorno', response);
+        console.warn('Retorno', response);
         this.items = this.MontarHierarquia(response);
         this.boolLoading = false;
       },
@@ -60,16 +60,12 @@ export class ExibirComponent implements OnInit {
       let objMenu: MenuItem = {
         icon: 'pi pi-folder',
         label: item.CatDesc,
-        items:
-          item.SubCategorias.length > 0
-            ? this.MontarHierarquia(item.SubCategorias)
-            : item.Sites.length > 0
-            ? this.AdicionaSites(item.Sites)
-            : [],
+        items: this.PreencheItems(item.SubCategorias, item.Sites),
       };
       menuItems.push(objMenu);
     });
 
+    console.warn(menuItems);
     return menuItems;
   }
 
@@ -85,5 +81,25 @@ export class ExibirComponent implements OnInit {
     });
 
     return menuItemsSites;
+  }
+
+  PreencheItems(categorias: CatSubCatModel[], sites: SiteModel[]) {
+    let itemRet: MenuItem[] = [];
+
+    if (categorias.length > 0) {
+      let lstCat: MenuItem[] = this.MontarHierarquia(categorias);
+      lstCat.forEach((itemCat) => {
+        itemRet.push(itemCat);
+      });
+    }
+
+    if (sites.length > 0) {
+      let lstSites: MenuItem[] = this.AdicionaSites(sites);
+      lstSites.forEach((itemSite) => {
+        itemRet.push(itemSite);
+      });
+    }
+
+    return itemRet;
   }
 }

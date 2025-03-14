@@ -22,6 +22,7 @@ export class CadastroComponent implements OnInit {
   items: MenuItem[] = [];
   itemSelecionado!: MenuItem;
   novoItem: CatSubCatModel = new CatSubCatModel();
+  novoSite: SiteModel = new SiteModel();
   boolRegistro: boolean = false;
 
   files: TreeNode[] = [];
@@ -88,7 +89,7 @@ export class CadastroComponent implements OnInit {
     this.http.GetFavoritos().subscribe({
       next: (response) => {
         this.lstMenus = response;
-        // console.warn('Retorno', this.lstMenus);
+        console.warn('Retorno', this.lstMenus);
         // console.warn('Retorno', JSON.stringify(this.lstMenus));
         this.items = this.MontarHierarquia(response);
         this.boolLoading = false;
@@ -118,12 +119,7 @@ export class CadastroComponent implements OnInit {
         command: () => {
           this.SelecionaItem(objMenu);
         },
-        items:
-          item.SubCategorias.length > 0
-            ? this.MontarHierarquia(item.SubCategorias)
-            : item.Sites.length > 0
-            ? this.AdicionaSites(item.Sites)
-            : [],
+        items: this.PreencheItems(item.SubCategorias, item.Sites),
       };
       menuItems.push(objMenu);
     });
@@ -150,6 +146,26 @@ export class CadastroComponent implements OnInit {
     return menuItemsSites;
   }
 
+  PreencheItems(categorias: CatSubCatModel[], sites: SiteModel[]) {
+    let itemRet: MenuItem[] = [];
+
+    if (categorias.length > 0) {
+      let lstCat: MenuItem[] = this.MontarHierarquia(categorias);
+      lstCat.forEach((itemCat) => {
+        itemRet.push(itemCat);
+      });
+    }
+
+    if (sites.length > 0) {
+      let lstSites: MenuItem[] = this.AdicionaSites(sites);
+      lstSites.forEach((itemSite) => {
+        itemRet.push(itemSite);
+      });
+    }
+
+    return itemRet;
+  }
+
   SelecionaItem(item: MenuItem) {
     this.itemSelecionado = item;
     console.warn(this.itemSelecionado);
@@ -166,17 +182,35 @@ export class CadastroComponent implements OnInit {
     switch (tipo) {
       case 'NOVA_SUBCATEGORIA':
         console.warn('NOVA_SUBCATEGORIA', this.itemSelecionado);
-        this.novoItem.CatCodi = +this.itemSelecionado.id!;
-        this.novoItem.CatPai = +this.itemSelecionado['key'];
+        this.itemSelecionado.target == 'CATEGORIA';
+        // this.novoItem.CatCodi = +this.itemSelecionado.id!;
+        this.novoItem.CatPai = +this.itemSelecionado.id!;
+
+        //-> SE FOR O 1º NÍVEL
+        if (this.novoItem.CatPai == 0) {
+          this.novoItem.CatPai = this.novoItem.CatCodi;
+          this.novoItem.CatCodi = 0;
+          console.warn('1º Nível');
+        }
         break;
       case 'EDITAR_CATEGORIA':
         console.warn('EDITAR_CATEGORIA', this.itemSelecionado);
+        this.itemSelecionado.target == 'CATEGORIA';
         this.novoItem.CatCodi = +this.itemSelecionado.id!;
         this.novoItem.CatPai = +this.itemSelecionado['key'];
         this.novoItem.CatDesc = this.itemSelecionado.label!;
         break;
       case 'NOVO_SITE':
         console.warn('NOVO_SITE', this.itemSelecionado);
+        this.itemSelecionado.target = 'SITE';
+        this.novoSite.catCodi = +this.itemSelecionado.id!;
+        this.novoSite.sttCodi = 1;
+        break;
+      case 'EDITAR_SITE':
+        console.warn('EDITAR_SITE', this.itemSelecionado);
+        this.itemSelecionado.target = 'SITE';
+        this.novoSite.catCodi = +this.itemSelecionado.id!;
+        this.novoSite.sttCodi = 1;
         break;
 
       default:
@@ -187,14 +221,6 @@ export class CadastroComponent implements OnInit {
   }
 
   SalvarNovaSubcategoria() {
-    if (this.novoItem.CatPai === 0) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Atenção: ',
-        detail: 'Subcategoria sem referência hierárquica.',
-      });
-      return;
-    }
     if (this.novoItem.CatDesc.length === 0) {
       this.messageService.add({
         severity: 'warn',
@@ -204,22 +230,45 @@ export class CadastroComponent implements OnInit {
       return;
     }
 
-    this.novoItem.CatPai = +this.itemSelecionado['key']
-      ? +this.itemSelecionado['key']
-      : 0;
+    console.warn('objEnvioPostCategoria: ', this.novoItem);
     this.PostCategoria(this.novoItem);
+  }
+
+  SalvarNovoSite() {
+    if (this.novoSite.sitDesc.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Atenção: ',
+        detail: 'Insira uma descrição.',
+      });
+      return;
+    }
+    if (this.novoSite.sitLink.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Atenção: ',
+        detail: 'Insira um link.',
+      });
+      return;
+    }
+
+    console.warn('objEnvioPostSite: ', this.novoSite);
+    // this.PostCategoria(this.novoItem);
   }
 
   PostCategoria(objCat: CatSubCatModel) {
     this.boolLoading = true;
     this.http.PostCategoria(objCat).subscribe({
       next: (response) => {
-        console.warn('Retorno Insert? ', response);
-        if (response === 'Salvo com sucesso!') {
+        console.warn('Retorno Insert: ', response);
+        if (
+          response === 'Salvo com sucesso!' ||
+          response === 'Alterado com sucesso!'
+        ) {
           this.messageService.add({
             severity: 'success',
             summary: 'Sucesso! ',
-            detail: 'Subcategoria Salva com Sucesso!',
+            detail: 'Item salvo com Sucesso!',
           });
         }
         this.boolLoading = false;
