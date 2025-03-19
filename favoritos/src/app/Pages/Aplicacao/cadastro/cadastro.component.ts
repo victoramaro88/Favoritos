@@ -25,6 +25,9 @@ export class CadastroComponent implements OnInit {
   novoItem: CatSubCatModel = new CatSubCatModel();
   novoSite: SiteModel = new SiteModel();
   boolRegistro: boolean = false;
+  boolEditarSite: boolean = false;
+  boolEditarCategoria: boolean = false;
+  boolNovoSite: boolean = false;
 
   files: TreeNode[] = [];
 
@@ -91,8 +94,7 @@ export class CadastroComponent implements OnInit {
     this.http.GetFavoritos().subscribe({
       next: (response) => {
         this.lstMenus = response;
-        console.warn('Retorno', this.lstMenus);
-        // console.warn('Retorno', JSON.stringify(this.lstMenus));
+        // console.warn('Retorno', this.lstMenus);
         this.items = this.MontarHierarquia(response);
         this.boolLoading = false;
       },
@@ -133,9 +135,9 @@ export class CadastroComponent implements OnInit {
     let menuItemsSites: MenuItem[] = [];
     listaSites.forEach((itemSite) => {
       let objSite: MenuItem = {
-        id: itemSite.sitCodi.toString(),
+        id: itemSite.SitCodi.toString(),
         icon: 'pi pi-link',
-        label: itemSite.sitDesc,
+        label: itemSite.SitDesc,
         target: 'SITE',
         command: () => {
           this.SelecionaItem(objSite);
@@ -170,7 +172,22 @@ export class CadastroComponent implements OnInit {
 
   SelecionaItem(item: MenuItem) {
     this.itemSelecionado = item;
-    console.warn(this.itemSelecionado);
+    console.warn('ITEM SELECIONADO:', this.itemSelecionado);
+
+    switch (item.target) {
+      case 'SITE':
+        this.boolEditarSite = true;
+        this.boolEditarCategoria = false;
+        this.boolNovoSite = false;
+        break;
+      case 'CATEGORIA':
+        this.boolEditarSite = false;
+        this.boolEditarCategoria = true;
+        this.boolNovoSite = true;
+        break;
+      default:
+        break;
+    }
   }
 
   Cancelar() {
@@ -182,10 +199,21 @@ export class CadastroComponent implements OnInit {
 
   Selecao(tipo: string) {
     switch (tipo) {
+      case 'NOVA_CATEGORIA':
+        // console.warn('NOVA_SUBCATEGORIA', this.itemSelecionado);
+        this.itemSelecionado = { target: 'CATEGORIA' };
+        this.novoItem.CatPai = 0;
+
+        //-> SE FOR O 1º NÍVEL
+        // if (this.novoItem.CatPai == 0) {
+        //   this.novoItem.CatPai = this.novoItem.CatCodi;
+        //   this.novoItem.CatCodi = 0;
+        //   console.warn('1º Nível');
+        // }
+        break;
       case 'NOVA_SUBCATEGORIA':
-        console.warn('NOVA_SUBCATEGORIA', this.itemSelecionado);
-        this.itemSelecionado.target == 'CATEGORIA';
-        // this.novoItem.CatCodi = +this.itemSelecionado.id!;
+        // console.warn('NOVA_SUBCATEGORIA', this.itemSelecionado);
+        this.itemSelecionado.target = 'CATEGORIA';
         this.novoItem.CatPai = +this.itemSelecionado.id!;
 
         //-> SE FOR O 1º NÍVEL
@@ -196,24 +224,23 @@ export class CadastroComponent implements OnInit {
         }
         break;
       case 'EDITAR_CATEGORIA':
-        console.warn('EDITAR_CATEGORIA', this.itemSelecionado);
-        this.itemSelecionado.target == 'CATEGORIA';
+        // console.warn('EDITAR_CATEGORIA', this.itemSelecionado);
+        this.itemSelecionado.target = 'CATEGORIA';
         this.novoItem.CatCodi = +this.itemSelecionado.id!;
         this.novoItem.CatPai = +this.itemSelecionado['key'];
         this.novoItem.CatDesc = this.itemSelecionado.label!;
         break;
       case 'NOVO_SITE':
-        console.warn('NOVO_SITE', this.itemSelecionado);
+        // console.warn('NOVO_SITE', this.itemSelecionado);
         this.itemSelecionado.target = 'SITE';
-        this.novoSite.catCodi = +this.itemSelecionado.id!;
-        this.novoSite.sttCodi = 1;
+        this.novoSite.CatCodi = +this.itemSelecionado.id!;
+        this.novoSite.SttCodi = 1;
         break;
       case 'EDITAR_SITE':
-        console.warn('EDITAR_SITE', this.itemSelecionado);
+        // console.warn('EDITAR_SITE', this.itemSelecionado);
         this.itemSelecionado.target = 'SITE';
-        this.novoSite.catCodi = +this.itemSelecionado.id!;
-        this.novoSite.sttCodi = 1;
-        //this.novoSite.sitDesc = this.itemSelecionado.label!;
+        // this.novoSite.catCodi = +this.itemSelecionado.id!;
+        // this.novoSite.sttCodi = 1;
         this.GetSite(+this.itemSelecionado.id!);
         break;
 
@@ -239,7 +266,7 @@ export class CadastroComponent implements OnInit {
   }
 
   SalvarNovoSite() {
-    if (this.novoSite.sitDesc.length === 0) {
+    if (this.novoSite.SitDesc.length === 0) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Atenção: ',
@@ -247,7 +274,7 @@ export class CadastroComponent implements OnInit {
       });
       return;
     }
-    if (this.novoSite.sitLink.length === 0) {
+    if (this.novoSite.SitLink.length === 0) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Atenção: ',

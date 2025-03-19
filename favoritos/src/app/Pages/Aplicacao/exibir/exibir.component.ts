@@ -37,7 +37,7 @@ export class ExibirComponent implements OnInit {
     this.boolLoading = true;
     this.http.GetFavoritos().subscribe({
       next: (response) => {
-        console.warn('Retorno', response);
+        // console.warn('Retorno', response);
         this.items = this.MontarHierarquia(response);
         this.boolLoading = false;
       },
@@ -65,7 +65,6 @@ export class ExibirComponent implements OnInit {
       menuItems.push(objMenu);
     });
 
-    console.warn(menuItems);
     return menuItems;
   }
 
@@ -74,8 +73,8 @@ export class ExibirComponent implements OnInit {
     listaSites.forEach((itemSite) => {
       let objSite: MenuItem = {
         icon: 'pi pi-link',
-        label: itemSite.sitDesc,
-        url: itemSite.sitLink,
+        label: itemSite.SitDesc,
+        url: itemSite.SitLink,
       };
       menuItemsSites.push(objSite);
     });

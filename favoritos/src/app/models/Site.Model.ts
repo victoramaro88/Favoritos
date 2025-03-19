@@ -1,17 +1,17 @@
 export class SiteModel {
-  sitCodi: number;
-  sitDesc: string;
-  sitLink: string;
-  sitObse: string;
-  sttCodi: number;
-  catCodi: number;
+  SitCodi: number;
+  SitDesc: string;
+  SitLink: string;
+  SitObse: string;
+  SttCodi: number;
+  CatCodi: number;
 
   constructor() {
-    this.sitCodi = 0;
-    this.sitDesc = '';
-    this.sitLink = '';
-    this.sitObse = '';
-    this.sttCodi = 0;
-    this.catCodi = 0;
+    this.SitCodi = 0;
+    this.SitDesc = '';
+    this.SitLink = '';
+    this.SitObse = '';
+    this.SttCodi = 0;
+    this.CatCodi = 0;
   }
 }

@@ -41,10 +41,10 @@
       <p>AÇÕES:</p><br>
       <div class="grid">
         <div class="col-6">
-          <p-button (onClick)="Selecao('NOVA_SUBCATEGORIA');" label="Nova Subcategoria" [raised]="true" severity="success" /><br><br>
-          <p-button (onClick)="Selecao('NOVO_SITE');" label="Novo Site" [raised]="true" severity="contrast" /><br><br>
-          <p-button (onClick)="Selecao('EDITAR_CATEGORIA');" label="Editar Categoria" [raised]="true" severity="info" /><br><br>
-          <p-button (onClick)="Selecao('EDITAR_SITE');" label="Editar Site" [raised]="true" severity="info" /><br><br>
+          <div><p-button (onClick)="Selecao('NOVA_SUBCATEGORIA');" label="Nova Subcategoria" [raised]="true" severity="success" /><br><br></div>
+          <div *ngIf="boolNovoSite"><p-button (onClick)="Selecao('NOVO_SITE');" label="Novo Site" [raised]="true" severity="contrast" /><br><br></div>
+          <div *ngIf="boolEditarCategoria"><p-button (onClick)="Selecao('EDITAR_CATEGORIA');" label="Editar Categoria" [raised]="true" severity="info" /><br><br></div>
+          <div *ngIf="boolEditarSite"><p-button (onClick)="Selecao('EDITAR_SITE');" label="Editar Site" [raised]="true" severity="info" /><br><br></div>
         </div>
         <div class="col-6">
           <p-button label="Apagar" [raised]="true" severity="warn" /><br><br>
@@ -53,8 +53,8 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!itemSelecionado || !itemSelecionado.label" class="col-12 md:col-6 text-center">
-    <p-button label="Nova Categoria" [raised]="true" severity="success" />
+  <div *ngIf="!itemSelecionado" class="col-12 md:col-6 text-center">
+    <p-button (onClick)="Selecao('NOVA_CATEGORIA');" label="Nova Categoria" [raised]="true" severity="success" />
   </div>
   <!-- TELAS PARA OS CADASTROS / ALTERAÇÕES -->
   <div class="col-12 md:col-6 text-center p-3">
@@ -75,17 +75,17 @@
       <span>Categoria Pai: {{itemSelecionado.label}}</span><br>
       <div class="field">
         <label for="sitDesc">Descrição</label>
-        <input [(ngModel)]="novoSite.sitDesc" id="sitDesc" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
+        <input [(ngModel)]="novoSite.SitDesc" id="sitDesc" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
       </div>
       <br>
       <div class="field">
         <label for="sitLink">Link</label>
-        <input [(ngModel)]="novoSite.sitLink" id="sitLink" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
+        <input [(ngModel)]="novoSite.SitLink" id="sitLink" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
       </div>
       <br>
       <div class="field">
         <label for="sitObse">Obervação</label>
-        <input [(ngModel)]="novoSite.sitObse" id="sitObse" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
+        <input [(ngModel)]="novoSite.SitObse" id="sitObse" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
       </div>
       <br>
       <p-button (onClick)="SalvarNovoSite();" label="Salvar" [raised]="true" severity="success" />

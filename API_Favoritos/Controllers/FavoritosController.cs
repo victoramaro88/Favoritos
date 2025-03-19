@@ -111,6 +111,24 @@ namespace API_Favoritos.Controllers
 
                     return Ok("Alterado com sucesso!");
                 }
+                else if (objCategoria.CatCodi != 0 && objCategoria.CatPai == 0) //-> ALTERA CATEGORIA NÍVEL 0
+                {
+                    if (!CategoriaExists(objCategoria.CatCodi))
+                    {
+                        return NotFound("Registro não encontrado.");
+                    }
+
+                    Categorium objUpdate = new Categorium();
+                    objUpdate.CatCodi = objCategoria.CatCodi;
+                    objUpdate.CatDesc = objCategoria.CatDesc!;
+                    objUpdate.CatPai = null;
+                    objUpdate.SttCodi = 1;
+
+                    _context.Entry(objUpdate).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+
+                    return Ok("Alterado com sucesso!");
+                }
                 else
                 { 
                     return BadRequest("Parâmetros inválidos."); 
@@ -127,16 +145,16 @@ namespace API_Favoritos.Controllers
         {
             try
             {
-                if (objSite.sitCodi == 0) //-> INSERE O SITE
+                if (objSite.SitCodi == 0) //-> INSERE O SITE
                 {
-                    objSite.sitCodi = _context.Sites.Max(p => (int?)p.SitCodi) + 1 ?? 1;
+                    objSite.SitCodi = _context.Sites.Max(p => (int?)p.SitCodi) + 1 ?? 1;
 
                     Site objInsert = new Site();
-                    objInsert.SitCodi = objSite.sitCodi;
-                    objInsert.SitDesc = objSite.sitDesc!;
-                    objInsert.SitLink = objSite.sitLink!;
-                    objInsert.SitObse = objSite.sitObse!;
-                    objInsert.CatCodi = objSite.catCodi;
+                    objInsert.SitCodi = objSite.SitCodi;
+                    objInsert.SitDesc = objSite.SitDesc!;
+                    objInsert.SitLink = objSite.SitLink!;
+                    objInsert.SitObse = objSite.SitObse!;
+                    objInsert.CatCodi = objSite.CatCodi;
                     objInsert.SttCodi = 1; //-> Ativo sempre que insere.
 
                     _context.Sites.Add(objInsert);
@@ -146,17 +164,17 @@ namespace API_Favoritos.Controllers
                 }
                 else //-> ALTERA O SITE EXISTENTE
                 {
-                    if (!SiteExists(objSite.sitCodi))
+                    if (!SiteExists(objSite.SitCodi))
                     {
                         return NotFound("Registro não encontrado.");
                     }
 
                     Site objUpdate = new Site();
-                    objUpdate.SitCodi = objSite.sitCodi;
-                    objUpdate.SitDesc = objSite.sitDesc!;
-                    objUpdate.SitLink = objSite.sitLink!;
-                    objUpdate.SitObse = objSite.sitObse!;
-                    objUpdate.CatCodi = objSite.catCodi;
+                    objUpdate.SitCodi = objSite.SitCodi;
+                    objUpdate.SitDesc = objSite.SitDesc!;
+                    objUpdate.SitLink = objSite.SitLink!;
+                    objUpdate.SitObse = objSite.SitObse!;
+                    objUpdate.CatCodi = objSite.CatCodi;
                     objUpdate.SttCodi = 1;
 
                     _context.Entry(objUpdate).State = EntityState.Modified;
@@ -193,12 +211,12 @@ namespace API_Favoritos.Controllers
 
             var lstSiteDTO = sites.Select(s => new SiteModel
             {
-                sitCodi = s.SitCodi,
-                sitDesc = s.SitDesc,
-                sitLink = s.SitLink,
-                sitObse = s.SitObse,
-                sttCodi = s.SttCodi,
-                catCodi = s.CatCodi
+                SitCodi = s.SitCodi,
+                SitDesc = s.SitDesc,
+                SitLink = s.SitLink,
+                SitObse = s.SitObse,
+                SttCodi = s.SttCodi,
+                CatCodi = s.CatCodi
             });
 
             // 3. Método recursivo para estruturar a hierarquia
@@ -213,7 +231,7 @@ namespace API_Favoritos.Controllers
                         CatCodi = c.CatCodi,
                         CatDesc = c.CatDesc,
                         CatPai = c.CatPai,
-                        Sites = lstSiteDTO.Where(s => s.catCodi == c.CatCodi).ToList(), //-> Preenchendo os sites
+                        Sites = lstSiteDTO.Where(s => s.CatCodi == c.CatCodi).ToList(), //-> Preenchendo os sites
                         SubCategorias = MontarHierarquia(lista, c.CatCodi) // Recursão
                     })
                     .ToList();
@@ -234,12 +252,12 @@ namespace API_Favoritos.Controllers
 
             var lstSiteDTO = sites.Select(s => new SiteModel
             {
-                sitCodi = s.CatCodi,
-                sitDesc = s.SitDesc,
-                sitLink = s.SitLink,
-                sitObse = s.SitObse,
-                sttCodi = s.SttCodi,
-                catCodi = s.CatCodi
+                SitCodi = s.CatCodi,
+                SitDesc = s.SitDesc,
+                SitLink = s.SitLink,
+                SitObse = s.SitObse,
+                SttCodi = s.SttCodi,
+                CatCodi = s.CatCodi
             });
 
             CatSubCatModel objCat = new CatSubCatModel();

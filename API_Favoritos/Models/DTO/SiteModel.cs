@@ -2,11 +2,11 @@
 {
     public class SiteModel
     {
-        public int sitCodi { get; set; }
-        public string? sitDesc { get; set; }
-        public string? sitLink { get; set; }
-        public string? sitObse { get; set; }
-        public int sttCodi { get; set; }
-        public int catCodi { get; set; }
+        public int SitCodi { get; set; }
+        public string? SitDesc { get; set; }
+        public string? SitLink { get; set; }
+        public string? SitObse { get; set; }
+        public int SttCodi { get; set; }
+        public int CatCodi { get; set; }
     }
 }
