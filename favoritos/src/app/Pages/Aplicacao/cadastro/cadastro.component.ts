@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpService } from '../../../services/http-service.service';
 import { TreeNode } from 'primeng/api';
 import { SiteModel } from '../../../models/Site.Model';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-cadastro',
@@ -32,7 +33,8 @@ export class CadastroComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService,
-    private zone: NgZone
+    private zone: NgZone,
+    private cd: ChangeDetectorRef
   ) {
     let objTree: TreeNode = {
       key: '0',
@@ -211,6 +213,8 @@ export class CadastroComponent implements OnInit {
         this.itemSelecionado.target = 'SITE';
         this.novoSite.catCodi = +this.itemSelecionado.id!;
         this.novoSite.sttCodi = 1;
+        //this.novoSite.sitDesc = this.itemSelecionado.label!;
+        this.GetSite(+this.itemSelecionado.id!);
         break;
 
       default:
@@ -253,7 +257,7 @@ export class CadastroComponent implements OnInit {
     }
 
     console.warn('objEnvioPostSite: ', this.novoSite);
-    // this.PostCategoria(this.novoItem);
+    this.PostSite(this.novoSite);
   }
 
   PostCategoria(objCat: CatSubCatModel) {
@@ -274,6 +278,60 @@ export class CadastroComponent implements OnInit {
         this.boolLoading = false;
         this.GetFavoritos();
         this.Cancelar();
+      },
+      error: (error) => {
+        console.error('Erro ao carregar dados:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro: ',
+          detail: 'Falha ao realizar a operação, contate o suporte.',
+        });
+        this.boolLoading = false;
+      },
+    });
+  }
+
+  PostSite(objSite: SiteModel) {
+    this.boolLoading = true;
+    this.http.PostSite(objSite).subscribe({
+      next: (response) => {
+        console.warn('Retorno Insert: ', response);
+        if (
+          response === 'Salvo com sucesso!' ||
+          response === 'Alterado com sucesso!'
+        ) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso! ',
+            detail: 'Item salvo com Sucesso!',
+          });
+        }
+        this.boolLoading = false;
+        this.GetFavoritos();
+        this.Cancelar();
+      },
+      error: (error) => {
+        console.error('Erro ao carregar dados:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro: ',
+          detail: 'Falha ao realizar a operação, contate o suporte.',
+        });
+        this.boolLoading = false;
+      },
+    });
+  }
+
+  GetSite(sitCodi: number) {
+    this.boolLoading = true;
+    this.http.GetSite(sitCodi).subscribe({
+      next: (response) => {
+        console.warn(response);
+        this.novoSite = response[0];
+        this.novoSite = { ...this.novoSite, ...response[0] };
+        console.warn(this.novoSite);
+        this.cd.detectChanges();
+        this.boolLoading = false;
       },
       error: (error) => {
         console.error('Erro ao carregar dados:', error);

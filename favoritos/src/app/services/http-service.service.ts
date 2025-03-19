@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CatSubCatModel } from '../models/CatSubCat.Model';
+import { SiteModel } from '../models/Site.Model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,12 @@ export class HttpService {
     );
   }
 
+  public GetSite(sitCodi: number): Observable<SiteModel[]> {
+    return this.http.get<SiteModel[]>(
+      `${environment.apiServicos}/Favoritos/GetSite/${sitCodi}`
+    );
+  }
+
   // #endregion
 
   // #region POST
@@ -26,6 +33,13 @@ export class HttpService {
     return this.http.post<string>(
       `${environment.apiServicos}/Favoritos/PostCategoria`,
       objCategoria
+    );
+  }
+
+  public PostSite(objSite: SiteModel): Observable<string> {
+    return this.http.post<string>(
+      `${environment.apiServicos}/Favoritos/PostSite`,
+      objSite
     );
   }
 

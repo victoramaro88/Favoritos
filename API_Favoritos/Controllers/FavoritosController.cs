@@ -29,6 +29,37 @@ namespace API_Favoritos.Controllers
             return catSubcat;
         }
 
+        [HttpGet("{sitCodi}")]
+        public async Task<ActionResult<IEnumerable<Site>>> GetSite(int sitCodi = 0)
+        {
+            if (sitCodi > 0)
+            {
+                var result = await _context.Sites.FindAsync(sitCodi);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(new List<Site> { result });
+                }
+            }
+            else
+            {
+                var result = await _context.Sites.ToListAsync();
+
+                if (result == null || result.Count == 0)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(result);
+                }
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult<string>> PostCategoria([FromBody] CatSubCatModel objCategoria)
         {
@@ -91,6 +122,55 @@ namespace API_Favoritos.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult<string>> PostSite([FromBody] SiteModel objSite)
+        {
+            try
+            {
+                if (objSite.sitCodi == 0) //-> INSERE O SITE
+                {
+                    objSite.sitCodi = _context.Sites.Max(p => (int?)p.SitCodi) + 1 ?? 1;
+
+                    Site objInsert = new Site();
+                    objInsert.SitCodi = objSite.sitCodi;
+                    objInsert.SitDesc = objSite.sitDesc!;
+                    objInsert.SitLink = objSite.sitLink!;
+                    objInsert.SitObse = objSite.sitObse!;
+                    objInsert.CatCodi = objSite.catCodi;
+                    objInsert.SttCodi = 1; //-> Ativo sempre que insere.
+
+                    _context.Sites.Add(objInsert);
+                    await _context.SaveChangesAsync();
+
+                    return Ok("Salvo com sucesso!");
+                }
+                else //-> ALTERA O SITE EXISTENTE
+                {
+                    if (!SiteExists(objSite.sitCodi))
+                    {
+                        return NotFound("Registro não encontrado.");
+                    }
+
+                    Site objUpdate = new Site();
+                    objUpdate.SitCodi = objSite.sitCodi;
+                    objUpdate.SitDesc = objSite.sitDesc!;
+                    objUpdate.SitLink = objSite.sitLink!;
+                    objUpdate.SitObse = objSite.sitObse!;
+                    objUpdate.CatCodi = objSite.catCodi;
+                    objUpdate.SttCodi = 1;
+
+                    _context.Entry(objUpdate).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+
+                    return Ok("Alterado com sucesso!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + " \n " + ex.InnerException?.Message);
+            }
+        }
+
         [NonAction]
         private List<CatSubCatModel> ObterHierarquiaCategorias()
         {
@@ -113,7 +193,7 @@ namespace API_Favoritos.Controllers
 
             var lstSiteDTO = sites.Select(s => new SiteModel
             {
-                sitCodi = s.CatCodi,
+                sitCodi = s.SitCodi,
                 sitDesc = s.SitDesc,
                 sitLink = s.SitLink,
                 sitObse = s.SitObse,
@@ -175,6 +255,11 @@ namespace API_Favoritos.Controllers
         private bool CategoriaExists(int catCodi)
         {
             return _context.Categoria.Any(e => e.CatCodi == catCodi);
+        }
+
+        private bool SiteExists(int sitCodi)
+        {
+            return _context.Sites.Any(e => e.SitCodi == sitCodi);
         }
 
         //[HttpGet()]

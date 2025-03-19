@@ -83,6 +83,11 @@
         <input [(ngModel)]="novoSite.sitLink" id="sitLink" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
       </div>
       <br>
+      <div class="field">
+        <label for="sitObse">Obervação</label>
+        <input [(ngModel)]="novoSite.sitObse" id="sitObse" type="text" class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" style="text-align: center;">
+      </div>
+      <br>
       <p-button (onClick)="SalvarNovoSite();" label="Salvar" [raised]="true" severity="success" />
        &nbsp;
       <p-button (onClick)="Cancelar();" label="Cancelar" [raised]="true" severity="danger" />
