@@ -1,7 +1,7 @@
 import { CatSubCatModel } from './../../../models/CatSubCat.Model';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { ImportsModule } from '../../../imports';
-import { MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpService } from '../../../services/http-service.service';
 import { TreeNode } from 'primeng/api';
@@ -14,7 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
   imports: [ImportsModule, RouterModule],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.css',
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
 })
 export class CadastroComponent implements OnInit {
   boolLoading = false;
@@ -37,7 +37,8 @@ export class CadastroComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private zone: NgZone,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private confirmationService: ConfirmationService
   ) {
     let objTree: TreeNode = {
       key: '0',
@@ -368,6 +369,51 @@ export class CadastroComponent implements OnInit {
           detail: 'Falha ao realizar a operação, contate o suporte.',
         });
         this.boolLoading = false;
+      },
+    });
+  }
+
+  ApagarRegistro() {
+    console.warn('ITEM A SER APAGADO', this.itemSelecionado);
+
+    if (this.itemSelecionado.target === 'CATEGORIA') {
+      console.warn('CATEGORIA');
+    } else if (this.itemSelecionado.target === 'SITE') {
+      console.warn('SITE');
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Sucesso!',
+        detail: 'Site excluído com sucesso!',
+      });
+    }
+  }
+
+  confirmExclusaoSite(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Deseja realmente apagar este site?',
+      header: 'Confirmation',
+      closable: true,
+      closeOnEscape: true,
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Save',
+      },
+      accept: () => {
+        this.ApagarRegistro();
+      },
+      reject: () => {
+        // this.messageService.add({
+        //   severity: 'error',
+        //   summary: 'Rejected',
+        //   detail: 'You have rejected',
+        //   life: 3000,
+        // });
       },
     });
   }

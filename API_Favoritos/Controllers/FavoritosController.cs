@@ -189,6 +189,22 @@ namespace API_Favoritos.Controllers
             }
         }
 
+        [HttpDelete("{sitCodi}")]
+        public async Task<IActionResult> DeleteSite(int sitCodi)
+        {
+            var item = await _context.Sites.FindAsync(sitCodi);
+
+            if (item == null)
+            {
+                return NotFound("Item não encontrado.");
+            }
+
+            _context.Sites.Remove(item);
+            await _context.SaveChangesAsync();
+
+            return Ok("Item excluído com sucesso.");
+        }
+
         [NonAction]
         private List<CatSubCatModel> ObterHierarquiaCategorias()
         {

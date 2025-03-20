@@ -47,7 +47,7 @@
           <div *ngIf="boolEditarSite"><p-button (onClick)="Selecao('EDITAR_SITE');" label="Editar Site" [raised]="true" severity="info" /><br><br></div>
         </div>
         <div class="col-6">
-          <p-button label="Apagar" [raised]="true" severity="warn" /><br><br>
+          <p-button (onClick)="confirmExclusaoSite($event);" label="Apagar" [raised]="true" severity="warn" /><br><br>
           <p-button (onClick)="Cancelar();" label="Cancelar" [raised]="true" severity="danger" /><br><br>
         </div>
       </div>
@@ -94,3 +94,6 @@
     </div>
   </div>
 </div>
+
+
+<p-confirmdialog />
