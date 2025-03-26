@@ -378,13 +378,10 @@ export class CadastroComponent implements OnInit {
 
     if (this.itemSelecionado.target === 'CATEGORIA') {
       console.warn('CATEGORIA');
+      console.warn(this.itemSelecionado);
     } else if (this.itemSelecionado.target === 'SITE') {
       console.warn('SITE');
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Sucesso!',
-        detail: 'Site excluído com sucesso!',
-      });
+      this.DeleteSite(+this.itemSelecionado.id!);
     }
   }
 
@@ -414,6 +411,34 @@ export class CadastroComponent implements OnInit {
         //   detail: 'You have rejected',
         //   life: 3000,
         // });
+      },
+    });
+  }
+
+  DeleteSite(sitCodi: number) {
+    this.boolLoading = true;
+    this.http.DeleteSite(sitCodi).subscribe({
+      next: (response) => {
+        console.warn(response);
+        if (response === 'Item excluído com sucesso.') {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso! ',
+            detail: 'Site excluído com sucesso!',
+          });
+          this.GetFavoritos();
+          this.Cancelar();
+        }
+        this.boolLoading = false;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar dados:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro: ',
+          detail: 'Falha ao realizar a operação, contate o suporte.',
+        });
+        this.boolLoading = false;
       },
     });
   }

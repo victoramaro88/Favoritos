@@ -44,4 +44,14 @@ export class HttpService {
   }
 
   // #endregion
+
+  // #region DELETE
+
+  public DeleteSite(sitCodi: number): Observable<string> {
+    return this.http.delete<string>(
+      `${environment.apiServicos}/Favoritos/DeleteSite/${sitCodi}`
+    );
+  }
+
+  // #endregion
 }
